@@ -86,7 +86,7 @@ page.open(url, function (status) {
 		phantom.exit();
 	} else {
 		page.includeJs(jquery, function () {
-			var total_pages, i, products = [], curPage;
+			var total_pages, i;
 			total_pages = page.evaluate(function () {
 				return $('div.pagination-item.current')
 					.text()

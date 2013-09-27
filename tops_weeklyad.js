@@ -1,5 +1,5 @@
 /*global phantom, $ */
-var url = 'http://weeklyad.target.com/buffalo-ny-14216/categories?escape=false&sort=title';
+var url = 'http://www.topsmarkets.com/WeeklyAd/Store/232/';
 var jquery = 'http://code.jquery.com/jquery-1.10.1.min.js';
 var page = require('webpage').create();
 var page_stack = [];
@@ -11,10 +11,10 @@ page.onError = function (msg, trace) {
 		console.log('  ', item.file, ':', item.line);
 	});
 };
+*/
 page.onConsoleMessage = function (msg) {
 	console.log(msg);
 };
-*/
 
 var shutdown = function () {
 	var i;
@@ -92,18 +92,20 @@ page.open(url, function (status) {
 		phantom.exit();
 	} else {
 		page.includeJs(jquery, function () {
-			var total_pages, i;
-			total_pages = page.evaluate(function () {
-				return $('#top-pagination li.separator')
-					.text()
-					.trim()
-					.match(/^page \d* of (\d*)$/)[1];
+			page.render('screenshot.png');
+			page_stack = page.evaluate(function () {
+				var pages = [];
+				$('#pages_top>ul>li>ul>li>a').each(function () {
+					console.log($(this));
+					console.log($(this).attr('href'));
+					pages.push($(this).attr('href'));
+				});
+				console.log(pages);
+				return pages;
 			});
-			console.log('total pages: ' + total_pages);
-			for (i = 1; i <= total_pages; i += 1) {
-				page_stack.push(url + '&page=' + i);
-			}
-			getPageData();
+			console.log(page_stack);
+			console.log('total pages: ' + page_stack.length);
+			//getPageData();
 		});
 	}
 });
