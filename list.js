@@ -20,7 +20,10 @@ var shutdown = function () {
 	var i;
 	for (i in products) {
 		if (products.hasOwnProperty(i)) {
-			console.log(products[i].description + ' ' + products[i].price);
+			console.log(products[i].description);
+			console.log('    ' + products[i].price);
+			console.log('    ' + products[i].image);
+			console.log('    ' + products[i].link);
 		}
 	}
 	phantom.exit();
@@ -51,7 +54,7 @@ var getPageData = function () {
 					var output = curPage.evaluate(function () {
 						var output = [];
 						$('li.listing').each(function () {
-							var desc, price;
+							var desc, price, img, link;
 							desc = $(this).find('p.product-description>a')
 								.clone()
 								.children()
@@ -60,9 +63,13 @@ var getPageData = function () {
 								.text()
 								.trim();
 							price = $(this).find('p.product-price').text().trim();
+							img = $(this).find('div.image-wrapper a img').attr('src');
+							link = $(this).find('div.image-wrapper a').attr('href');
 							output.push({
 								description : desc,
-								price : price
+								price : price,
+								image: img,
+								link: 'http://weeklyad.target.com' + link
 							});
 						});
 						return output;
