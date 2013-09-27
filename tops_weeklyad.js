@@ -11,10 +11,10 @@ page.onError = function (msg, trace) {
 		console.log('  ', item.file, ':', item.line);
 	});
 };
-*/
 page.onConsoleMessage = function (msg) {
 	console.log(msg);
 };
+*/
 
 var shutdown = function () {
 	var i;
@@ -53,23 +53,17 @@ var getPageData = function () {
 				curPage.includeJs(jquery, function () {
 					var output = curPage.evaluate(function () {
 						var output = [];
-						$('li.listing').each(function () {
+						$('div.ItemRight[id^="AdItem"]').each(function () {
 							var desc, price, img, link;
-							desc = $(this).find('p.product-description>a')
-								.clone()
-								.children()
-								.remove()
-								.end()
-								.text()
-								.trim();
-							price = $(this).find('p.product-price').text().trim();
-							img = $(this).find('div.image-wrapper a img').attr('src');
-							link = $(this).find('div.image-wrapper a').attr('href');
+							img = $(this).find('div.leftCol img:first').attr('src');
+							link = window.location;
+							desc = $(this).find('div.rightCol').text().trim().replace(/(\r\n|\n|\r|\s{2,})/gm, "");
+							price = $(this).find('div.rightCol p.Pricing').text().trim().replace(/(\r\n|\n|\r|\s{2,})/gm, "");
 							output.push({
 								description : desc,
 								price : price,
 								image: img,
-								link: 'http://weeklyad.target.com' + link
+								link: link
 							});
 						});
 						return output;
@@ -92,20 +86,21 @@ page.open(url, function (status) {
 		phantom.exit();
 	} else {
 		page.includeJs(jquery, function () {
-			page.render('screenshot.png');
-			page_stack = page.evaluate(function () {
+			var pages, i;
+			pages = page.evaluate(function () {
 				var pages = [];
 				$('#pages_top>ul>li>ul>li>a').each(function () {
-					console.log($(this));
-					console.log($(this).attr('href'));
 					pages.push($(this).attr('href'));
 				});
-				console.log(pages);
 				return pages;
 			});
-			console.log(page_stack);
+			for (i in pages) {
+				if (pages.hasOwnProperty(i)) {
+					page_stack.push(pages[i]);
+				}
+			}
 			console.log('total pages: ' + page_stack.length);
-			//getPageData();
+			getPageData();
 		});
 	}
 });
