@@ -1,5 +1,5 @@
 /*global phantom, $ */
-var url = 'http://www.topsmarkets.com/WeeklyAd/Store/232/';
+var url = 'http://weeklyads.aldi.us/aldi/default.aspx?action=entry&pretailerid=-97994&siteid=1337&mode=html&StoreID=2623432';
 var jquery = 'http://code.jquery.com/jquery-1.10.1.min.js';
 var page = require('webpage').create();
 var page_stack = [];
@@ -53,17 +53,17 @@ var getPageData = function () {
 				curPage.includeJs(jquery, function () {
 					var output = curPage.evaluate(function () {
 						var output = [];
-						$('div.ItemRight[id^="AdItem"]').each(function () {
+						$('div.pagerollovers>div').each(function () {
 							var desc, price, img, link;
-							img = $(this).find('div.leftCol img:first').attr('src');
-							link = window.location.href;
-							desc = $(this).find('div.rightCol').text().replace(/(\r\n|\n|\r)/gm, "").replace(/\s{2,}/gm, " ").trim();
-							price = $(this).find('div.rightCol p.Pricing').text().replace(/(\r\n|\n|\r|)/gm, "").replace(/\s{2,}/gm, " ").trim();
+							desc = $(this).find('div.popupcontent>div.popdivtext>span.title').text().trim();
+							price = $(this).find('div.popupcontent>div.popdivtext>span.deal').text().trim();
+							img = $(this).find('div.popupcontent>div.popdivthumb>img').attr('src');
+							link = $(this).find('div.popupcontent>ul.buttons>li.moredetails>a').attr('href');
 							output.push({
 								description : desc,
 								price : price,
 								image: img,
-								link: link
+								link: 'http://weeklyads.aldi.us/aldi/' + link
 							});
 						});
 						return output;
@@ -80,6 +80,14 @@ var getPageData = function () {
 	}
 };
 
+phantom.addCookie({
+	'name' : 'DisplayMode',
+	'value' : 'preferred=html',
+	'domain' : 'weeklyads.aldi.us',
+	'path' : '/',
+	'expires' : (new Date()).getTime() + (1000 * 60 * 60)
+});
+
 page.open(url, function (status) {
 	if (status !== 'success') {
 		console.log('Unable to access network');
@@ -89,14 +97,14 @@ page.open(url, function (status) {
 			var pages, i;
 			pages = page.evaluate(function () {
 				var pages = [];
-				$('#pages_top>ul>li>ul>li>a').each(function () {
+				$('div.article.adcover>a').each(function () {
 					pages.push($(this).attr('href'));
 				});
 				return pages;
 			});
 			for (i in pages) {
 				if (pages.hasOwnProperty(i)) {
-					page_stack.push(pages[i]);
+					page_stack.push('http://weeklyads.aldi.us/aldi/' + pages[i]);
 				}
 			}
 			console.log('total pages: ' + page_stack.length);
