@@ -56,9 +56,9 @@ var getPageData = function () {
 						$('div.ItemRight[id^="AdItem"]').each(function () {
 							var desc, price, img, link;
 							img = $(this).find('div.leftCol img:first').attr('src');
-							link = window.location;
-							desc = $(this).find('div.rightCol').text().trim().replace(/(\r\n|\n|\r|\s{2,})/gm, "");
-							price = $(this).find('div.rightCol p.Pricing').text().trim().replace(/(\r\n|\n|\r|\s{2,})/gm, "");
+							link = window.location.href;
+							desc = $(this).find('div.rightCol').text().trim().replace(/(\r\n|\n|\r)/gm, "").replace(/\s{2,}/gm, " ").trim();
+							price = $(this).find('div.rightCol p.Pricing').text().trim().replace(/(\r\n|\n|\r|)/gm, "").replace(/\s{2,}/gm, " ").trim();
 							output.push({
 								description : desc,
 								price : price,
