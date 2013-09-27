@@ -26,6 +26,7 @@ var shutdown = function () {
 			console.log('    ' + products[i].link);
 		}
 	}
+	console.log(products.length);
 	phantom.exit();
 };
 
