@@ -24,7 +24,8 @@ setInterval(function () {
 		for (i in ads) {
 			if (ads.hasOwnProperty(i)) {
 				if (ads[i].products.length) {
-					products.concat(ads[i].products);
+					console.log(ads[i].products.length);
+					products = products.concat(ads[i].products);
 					ads.splice(i, 1);
 				}
 			}
