@@ -15,6 +15,7 @@ var ads = [
 var products = [];
 var i;
 var cache_file = 'cache.json';
+var html_file = 'output.html';
 var options = {
 	force_refresh: false
 };
@@ -39,18 +40,26 @@ if (args.length > 1) {
 }
 
 var handleResults = function () {
-	var j, newProducts = [];
+	var j, newProducts = [], html;
 	newProducts = filter(products);
+	html = "<html><head></head><body>";
 	for (j in newProducts) {
 		if (newProducts.hasOwnProperty(j)) {
-			console.log(newProducts[j].description);
-			console.log('     ' + newProducts[j].price);
-			console.log('     ' + newProducts[j].link);
-			console.log('     ' + newProducts[j].image);
+			html += "<div>";
+			html += "<div>" + newProducts[j].description + "</div>";
+			html += "<div>" + newProducts[j].price + "</div>";
+			html += "<div>";
+			html += "<a href='" + newProducts[j].link + "'>";
+			html += "<img src='" + newProducts[j].image + "' />";
+			html += "</a>";
+			html += "</div>";
+			html += "</div>";
 		}
 	}
-	console.log('total products: ' + products.length);
-	console.log('filtered products: ' + newProducts.length);
+	html += "<div>Total Products: " + products.length + "</div>";
+	html += "<div>Filtered Products: " + newProducts.length + "</div>";
+	html += "</body></html>";
+	fs.write(html_file, html, 'w');
 	phantom.exit();
 };
 
