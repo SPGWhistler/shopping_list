@@ -1,7 +1,11 @@
 /*global phantom, $ */
 var patterns = [
 	"^(?=.*apples )((?!candy).)*$",
-	"^.*strawberries.*$"
+	"^.*strawberries.*$",
+	"^.*paper towel.*$",
+	"^.*toilet paper.*$",
+	"^.*diapers.*$",
+	"^.*bananas.*$"
 ];
 exports.filter = function (list) {
 	var newList = [];

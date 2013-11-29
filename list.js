@@ -42,13 +42,18 @@ if (args.length > 1) {
 var handleResults = function () {
 	var j, newProducts = [], html;
 	newProducts = filter(products);
-	html = "<html><head></head><body>";
+	html = "<html><head>";
+	html += "<style>";
+	html += ".product { border: 1px solid black; }";
+	html += "</style>";
+	html += "</head>";
+	html += "<body>";
 	for (j in newProducts) {
 		if (newProducts.hasOwnProperty(j)) {
-			html += "<div>";
-			html += "<div>" + newProducts[j].description + "</div>";
-			html += "<div>" + newProducts[j].price + "</div>";
-			html += "<div>";
+			html += "<div class='product'>";
+			html += "<div class='desc'>" + newProducts[j].description + "</div>";
+			html += "<div class='price'>" + newProducts[j].price + "</div>";
+			html += "<div class='image'>";
 			html += "<a href='" + newProducts[j].link + "'>";
 			html += "<img src='" + newProducts[j].image + "' />";
 			html += "</a>";
